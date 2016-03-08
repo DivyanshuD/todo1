@@ -1,0 +1,233 @@
+<html ng-app="myApp">
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://mbenford.github.io/ngTagsInput/css/ng-tags-input.min.css"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/angularjs-toaster/1.1.0/toaster.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.1/angular-animate.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="http://mbenford.github.io/ngTagsInput/js/ng-tags-input.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angularjs-toaster/1.1.0/toaster.min.js"></script>
+    <script src="script.js"></script>
+
+    <title>TODO</title>
+  </head>
+  <body class="body" ng-controller="TodoController" ng-init="list()">
+
+    <center>
+      <div >
+        <div class="head">
+          <h1>ToDo List
+          </h1>
+          <br/>
+
+          <div style="padding-right: 15px;">
+            <button class="btn btn-default btn-sm" style="float:right;background-color:gray;" ng-click="find()">
+              <span class="glyphicon glyphicon-search"></span>
+            </button>
+            <input type="text" style="float:right" ng-model="tagfind"/>
+            <label style="float:right; font-size:20px;">Search:&nbsp;</label>
+
+          </div>
+
+          <br/><br/><br/><br/>
+
+        </div>
+        <form name="form">
+
+          <div class="input" style="opacity:0.8;">
+            <div>
+              <input type="text" ng-model="newTask.name" placeholder=" enter the task" required>
+              <br/><br/>
+              <button id="addbtn" type="submit" data-toggle="modal" data-target="#myModal" ng-click="addTask(form)" class="btn btn-default btn-sm">
+                <span class="glyphicon glyphicon-plus"></span>&nbsp;Add</button>
+
+              <br/>
+              <br/>
+            </div>
+          </div>
+        </form>
+
+        <div class="modal fade" id="myModal" role="dialog">
+          <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" ng-click="clear()">&times;</button>
+                <h4 class="modal-title">{{newTask.name}}</h4>
+              </div>
+              <div class="modal-body">
+                <table>
+                  <tr>
+                    <td>
+                      <label>Description&nbsp;&nbsp;</label>
+                    </td>
+                    <td></td>
+                    <td>
+                      <textarea class="form-control" ng-model="newTask.Description" placeholder="Description" required></textarea>
+                    </td>
+
+                  </tr>
+                  <tr></tr>
+                  <tr>
+                    <td>
+                      <label>Tags&nbsp;&nbsp;</label>
+                    </td>
+                    <td></td>
+                    <td>
+                      <tags-input ng-model="addMe" placeholder="Enter the Tag" required></tags-input>
+                    </td>
+                  </tr>
+
+                </table>
+
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" ng-click="addData()" data-dismiss="modal">Add</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clear()">Close</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div >
+          <div class="task_div" style="opacity:0.8;">
+            <div ng-hide="tasks.length<1">
+              <div >
+                <center>
+                  <table >
+                    <tbody ng-repeat="task in tasks ">
+                      <tr class="row">
+                        <td class="col-md-4" ng-if="task.status==true">
+                          <span >
+                            <input type="checkbox" checklist-model="task" checklist-value="task" ng-click="changeStatus($index)" class="id" checked/>&nbsp;<span >{{task.task_name}}</span>
+                          </span>
+                        </td>
+                        <td class="col-md-4" ng-if="task.status==false">
+                          <span >
+                            <input type="checkbox" checklist-model="task" checklist-value="task" ng-click="changeStatus($index)"/>&nbsp;<span >{{task.task_name}}</span>
+                          </span>
+                        </td>
+
+                        <td class="col-md-3">
+                          <button ng-click="editTask($index)" type="button" data-toggle="modal" data-target="#editModal" class="btn btn-default btn-sm">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                          </button>
+                        </td>
+
+                        <td class="col-md-3">
+                          <button ng-click="delTask($index)" type="button" class="btn btn-default btn-sm">
+                            <span class="glyphicon glyphicon-trash"></span>
+                          </button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="3">&nbsp;</td>
+                      </tr>
+
+                    </tbody>
+
+                  </table>
+                </center>
+                <br/>
+
+              </div>
+            </div>
+            <div class="row">
+              <hr width="98%"/>
+              <table>
+                <tr>
+                  <td>
+                    <button ng-click="removeCompleted()" type="button" class="btn btn-default btn-sm">
+                      <span class="glyphicon glyphicon-trash"></span>&nbsp;Remove Completed</button>
+                  </td>
+                  <td>&nbsp;</td>
+                  <td>
+
+                    <button ng-click="list()" type="button" class="btn btn-default btn-sm">
+                      &nbsp;All</button>
+                  </td>
+                  <td>&nbsp;</td>
+                  <td>
+                    <button ng-click="showCompleted()" type="button" class="btn btn-default btn-sm">
+                      &nbsp;Finished</button>
+                  </td>
+                  <td>&nbsp;</td>
+                  <td>
+                    <button ng-click="showIncomplete()" type="button" class="btn btn-default btn-sm">
+                      &nbsp;Current</button>
+                  </td>
+                  <td>&nbsp;</td>
+                </tr>
+              </table>
+
+            </div>
+          </div>
+
+          <!-- Edit Modal Window-->
+          <div class="modal fade" id="editModal" role="dialog">
+            <div class="modal-dialog">
+
+              <!-- Modal content-->
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" ng-click="clear()">&times;</button>
+                  <h4 class="modal-title">{{name}}</h4>
+                </div>
+                <div class="modal-body">
+                  <table>
+                    <tr>
+                      <td>
+                        <label>Task Name&nbsp;&nbsp;</label>
+                      </td>
+                      <td>
+                        <input type="text" ng-model="editName" class="form-control"/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label>Description&nbsp;&nbsp;</label>
+                      </td>
+
+                      <td>
+                        <textarea class="form-control" ng-model="editDetail" placeholder="Description" required></textarea>
+                      </td>
+
+                    </tr>
+                    <tr></tr>
+                    <tr>
+                      <td>
+                        <label>Tags&nbsp;&nbsp;</label>
+                      </td>
+
+                      <td>
+                        <tags-input ng-model="editTag" placeholder="Enter the Tag" required></tags-input>
+                      </td>
+                    </tr>
+
+                  </table>
+
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" ng-click="updateData()" data-dismiss="modal">
+                    <span class="glyphicon glyphicon-floppy-disk"></span>&nbsp;Update</button>
+                  <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clear()">
+                    <span class="glyphicon glyphicon-remove"></span>
+                  </span>&nbsp;Close</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </center>
+     <toaster-container></toaster-container>
+  </body>
+</html>
