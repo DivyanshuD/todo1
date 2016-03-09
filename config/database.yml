@@ -17,7 +17,7 @@ default: &default
   password: root
   socket: /var/run/mysqld/mysqld.sock
 
-test:
+production:
    url: <%= ENV['CLEARDB_DATABASE_URL'] %>
 
 # Warning: The database defined as "test" will be erased and
@@ -40,6 +40,6 @@ test:
 #
 # You can use this database configuration with:
 #
-  test:
+  production:
     url: <%= ENV['CLEARDB_DATABASE_URL'] %>
 #
